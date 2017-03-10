@@ -61,7 +61,7 @@ describe "#obfuscate_id_spin" do
   end
 end
 
-describe "#deobfuscate_id" do
+describe "#deobfuscated_id" do
   before do
     class User < ActiveRecord::Base
       obfuscate_id
@@ -70,9 +70,24 @@ describe "#deobfuscate_id" do
 
   let (:user) { User.create(id: 1) }
 
-  subject {User.deobfuscate_id(user.to_param).to_i}
-  it "should reverse the obfuscated id" do
+  subject(:deobfuscated_id) {User.deobfuscated_id(user.to_param).to_i}
+  it "reverses the obfuscated id" do
     should eq(user.id)
   end
 end
 
+describe "#obfuscated_id" do
+  before do
+      class User < ActiveRecord::Base
+          obfuscate_id
+        end
+    end
+
+  let(:user) { User.create(id: 1) }
+
+  subject(:obfuscated_id) { User.obfuscated_id(user.id).to_i }
+
+  it "obfuscates the id" do
+    should eq(user.to_param.to_i)
+  end
+end
