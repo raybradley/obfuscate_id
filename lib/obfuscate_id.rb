@@ -30,7 +30,8 @@ module ObfuscateId
           scope = deobfuscated_id(scope)
         end
       end
-      super(scope)
+      normalized_options = options.reject {|option, val| option == :no_obfuscated_id} # Clear the params that ActiveRecord doesn't like
+      super(scope, normalized_options)
     end
 
     def has_obfuscated_id?

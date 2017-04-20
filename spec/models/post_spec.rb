@@ -29,6 +29,15 @@ describe Post do
     end
   end
 
+  describe "Finding with lock" do
+    subject { Post.create content: "original" }
+
+    it "acquires the record with a lock" do
+      expect(ActiveRecord::Base).to receive(:find).with(Post.deobfuscated_id(subject.to_param), {lock: true})
+      Post.find(subject.to_param, {lock: true})
+    end
+  end
+
   describe "Finding multiple records" do
     let (:post1) { Post.create content: "one" }
     let (:post2) { Post.create content: "two" }
